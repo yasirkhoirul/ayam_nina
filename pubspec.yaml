@@ -9,6 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  go_router: ^17.2.2
+  get_it: ^9.2.1
+  flutter_bloc: ^9.1.1
+  google_fonts: ^6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -17,3 +21,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/Logo-C1.png
+  
