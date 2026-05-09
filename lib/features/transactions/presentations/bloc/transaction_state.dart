@@ -1,0 +1,32 @@
+part of 'transaction_bloc.dart';
+
+sealed class TransactionState extends Equatable {
+  const TransactionState();
+
+  @override
+  List<Object> get props => [];
+}
+
+final class TransactionInitial extends TransactionState {}
+
+final class TransactionLoading extends TransactionState {}
+
+final class TransactionSuccess extends TransactionState {}
+
+final class AnnualGrowthLoaded extends TransactionState {
+  final AnnualGrowth annualGrowth;
+
+  const AnnualGrowthLoaded({required this.annualGrowth});
+
+  @override
+  List<Object> get props => [annualGrowth];
+}
+
+final class TransactionError extends TransactionState {
+  final String message;
+
+  const TransactionError({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
