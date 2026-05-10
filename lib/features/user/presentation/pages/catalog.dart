@@ -31,6 +31,7 @@ class _CatalogPageState extends State<CatalogPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFFDFBF0),
       drawer: isDesktop ? null : const UserDrawer(),
+      bottomNavigationBar: UserFooter(isDesktop: isDesktop),
       body: CustomScrollView(
         slivers: [
           UserNavBar(isDesktop: isDesktop),
@@ -67,7 +68,10 @@ class _CatalogPageState extends State<CatalogPage> {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  AnimatedScrollItem(id: 'catalog_cats', child: _buildCategories()),
+                  AnimatedScrollItem(
+                    id: 'catalog_cats',
+                    child: _buildCategories(),
+                  ),
                   const SizedBox(height: 32),
                 ],
               ),
@@ -88,9 +92,15 @@ class _CatalogPageState extends State<CatalogPage> {
                 }
 
                 // Temporary filter logic
-                final filteredProducts = selectedCategory == "All" 
-                    ? products 
-                    : products.where((p) => p.category.toLowerCase() == selectedCategory.toLowerCase()).toList();
+                final filteredProducts = selectedCategory == "All"
+                    ? products
+                    : products
+                          .where(
+                            (p) =>
+                                p.category.toLowerCase() ==
+                                selectedCategory.toLowerCase(),
+                          )
+                          .toList();
 
                 return SliverPadding(
                   padding: EdgeInsets.symmetric(
@@ -103,19 +113,16 @@ class _CatalogPageState extends State<CatalogPage> {
                       crossAxisSpacing: 24,
                       childAspectRatio: isDesktop ? 0.8 : 0.85,
                     ),
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        return AnimatedScrollItem(
-                          id: 'product_$index',
-                          child: ProductGridItem(
-                            product: filteredProducts[index],
-                            isAdmin: false,
-                            onDelete: () {}, // No action for user side
-                          ),
-                        );
-                      },
-                      childCount: filteredProducts.length,
-                    ),
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      return AnimatedScrollItem(
+                        id: 'product_$index',
+                        child: ProductGridItem(
+                          product: filteredProducts[index],
+                          isAdmin: false,
+                          onDelete: () {}, // No action for user side
+                        ),
+                      );
+                    }, childCount: filteredProducts.length),
                   ),
                 );
               }
@@ -124,7 +131,6 @@ class _CatalogPageState extends State<CatalogPage> {
               );
             },
           ),
-          UserFooter(isDesktop: isDesktop),
         ],
       ),
     );
@@ -150,7 +156,9 @@ class _CatalogPageState extends State<CatalogPage> {
               color: isSelected ? const Color(0xFF8B4513) : Colors.white,
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                color: isSelected ? const Color(0xFF8B4513) : Colors.grey.shade300,
+                color: isSelected
+                    ? const Color(0xFF8B4513)
+                    : Colors.grey.shade300,
               ),
             ),
             child: Text(

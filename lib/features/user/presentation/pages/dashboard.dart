@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kedai_ayam_nina/core/assets.dart';
 import 'package:kedai_ayam_nina/core/widgets/animated_scroll_item.dart';
 import 'package:kedai_ayam_nina/core/widgets/card/card_product.dart';
 import 'package:kedai_ayam_nina/core/widgets/custom_button_gradient.dart';
@@ -32,6 +33,7 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       backgroundColor: const Color(0xFFFDFBF0),
       drawer: isDesktop ? null : const UserDrawer(),
+      bottomNavigationBar: UserFooter(isDesktop: isDesktop),
       body: CustomScrollView(
         slivers: [
           UserNavBar(isDesktop: isDesktop),
@@ -52,7 +54,7 @@ class _DashboardState extends State<Dashboard> {
           ),
 
           // Footer
-          UserFooter(isDesktop: isDesktop),
+          
         ],
       ),
     );
@@ -94,8 +96,8 @@ class _DashboardState extends State<Dashboard> {
             color: Colors.black,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: const Center(
-            child: Icon(Icons.fastfood, color: Colors.redAccent, size: 30),
+          child: Center(
+            child: Image.asset(Assets.logoC1,fit: BoxFit.fitWidth,),
           ),
         ),
         const SizedBox(height: 24),

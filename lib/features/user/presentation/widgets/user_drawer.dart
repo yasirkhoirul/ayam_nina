@@ -49,13 +49,6 @@ class UserDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.photo_library, color: Colors.black87),
-            title: const Text("Gallery", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
             leading: Icon(Icons.info, color: getColor(MyRoute.about.path)),
             title: Text("About", style: TextStyle(color: getColor(MyRoute.about.path), fontWeight: FontWeight.bold)),
             onTap: () {

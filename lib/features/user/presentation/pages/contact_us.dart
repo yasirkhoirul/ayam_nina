@@ -15,6 +15,7 @@ class ContactUsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFFDFBF0),
       drawer: isDesktop ? null : const UserDrawer(),
+      bottomNavigationBar: UserFooter(isDesktop: isDesktop),
       body: CustomScrollView(
         slivers: [
           UserNavBar(isDesktop: isDesktop),
@@ -50,17 +51,16 @@ class ContactUsPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
-                  AnimatedScrollItem(id: 'contact_card_email', child: _buildContactCard(Icons.email, "Email", "hello@kedaiayamnina.com")),
+                 
                   const SizedBox(height: 16),
-                  AnimatedScrollItem(id: 'contact_card_phone', child: _buildContactCard(Icons.phone, "Phone", "+62 812 3456 7890")),
+                  AnimatedScrollItem(id: 'contact_card_phone', child: _buildContactCard(Icons.phone, "Phone", "+62 895-3832-05337")),
                   const SizedBox(height: 16),
-                  AnimatedScrollItem(id: 'contact_card_loc', child: _buildContactCard(Icons.location_on, "Location", "Jl. Ayam Goreng No. 1, Jakarta")),
+                  AnimatedScrollItem(id: 'contact_card_loc', child: _buildContactCard(Icons.location_on, "Location", "Yogyakarta, Indonesia")),
                 ],
               ),
             ),
           ),
-          UserFooter(isDesktop: isDesktop),
+          
         ],
       ),
     );

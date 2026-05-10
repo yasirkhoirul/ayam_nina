@@ -44,7 +44,7 @@ class AppRouter {
         }else{
           if (state.fullPath == MyRoute.login.path || state.fullPath == MyRoute.signup.path) {
             if (bloc.state is AuthSuccess) {
-              return MyRoute.adminCatalog.path;
+              return MyRoute.adminAnalytics.path;
             }else{
               null;
             }

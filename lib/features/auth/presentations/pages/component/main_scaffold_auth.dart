@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kedai_ayam_nina/router/router.dart';
 
 class MainScaffoldAuth extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -9,16 +10,18 @@ class MainScaffoldAuth extends StatelessWidget {
       return Scaffold(
         appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Row(
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.arrow_back_ios,color: Theme.of(context).colorScheme.primary,),
-            ),
-            Text("Kembali ke Dashboard",style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-            ),),
-          ],
+        title: InkWell(
+          onTap: () {
+            context.go(MyRoute.home.path);
+          },
+          child: Row(
+            children: [
+              Icon(Icons.arrow_back_ios,color: Theme.of(context).colorScheme.primary,),
+              Text("Kembali ke Dashboard",style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+              ),),
+            ],
+          ),
         ),
       ),
         body: SafeArea(

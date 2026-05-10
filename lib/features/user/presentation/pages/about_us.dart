@@ -15,6 +15,7 @@ class AboutUsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFFDFBF0),
       drawer: isDesktop ? null : const UserDrawer(),
+      bottomNavigationBar: UserFooter(isDesktop: isDesktop),
       body: CustomScrollView(
         slivers: [
           UserNavBar(isDesktop: isDesktop),
@@ -42,7 +43,7 @@ class AboutUsPage extends StatelessWidget {
                   AnimatedScrollItem(
                     id: 'about_desc',
                     child: const Text(
-                      "Kedai Ayam Nina didirikan dengan semangat untuk menyajikan ayam goreng terbaik dengan cita rasa khas Nusantara.",
+                      "Kedai Ayam Nina adalah rumah bagi pencinta ayam goreng sejati. Didirikan di jantung kota Yogyakarta pada tahun 2023, kami berkomitmen menghadirkan pengalaman kuliner yang tak terlupakan. Perpaduan resep tradisional Nusantara, rempah pilihan, dan dedikasi tinggi menjadi rahasia di balik kelezatan setiap sajian kami.",
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.black87,
@@ -71,7 +72,7 @@ class AboutUsPage extends StatelessWidget {
               ),
             ),
           ),
-          UserFooter(isDesktop: isDesktop),
+          
         ],
       ),
     );

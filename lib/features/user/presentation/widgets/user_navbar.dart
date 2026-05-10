@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kedai_ayam_nina/core/assets.dart';
 import 'package:kedai_ayam_nina/core/widgets/custom_button_gradient.dart';
 import 'package:kedai_ayam_nina/router/router.dart';
 
@@ -24,6 +25,9 @@ class UserNavBar extends StatelessWidget {
     }
 
     return SliverAppBar(
+      iconTheme: const IconThemeData(
+        color: Color(0xFF6B240C), // Contoh warna cokelat menyesuaikan teks, atau gunakan Colors.black
+      ),
       backgroundColor: const Color(0xFFFDFBF0),
       floating: true,
       pinned: true,
@@ -32,13 +36,18 @@ class UserNavBar extends StatelessWidget {
         onTap: () {
           context.goNamed(MyRoute.home.name);
         },
-        child: const Text(
-          "Kedai Ayam Nina",
-          style: TextStyle(
-            color: Color(0xFF8B4513),
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
+        child: Row(
+          children: [
+            Image.asset(Assets.logoC1,width: 64,height: 64,),
+            const Text(
+              "Kedai Ayam Nina",
+              style: TextStyle(
+                color: Color(0xFF8B4513),
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ],
         ),
       ),
       actions: [
@@ -56,11 +65,7 @@ class UserNavBar extends StatelessWidget {
             },
             child: Text("Menu", style: TextStyle(color: getColor(MyRoute.catalog.path), fontWeight: getWeight(MyRoute.catalog.path))),
           ),
-          const SizedBox(width: 8),
-          TextButton(
-            onPressed: () {},
-            child: const Text("Gallery", style: TextStyle(color: Colors.black87)),
-          ),
+          
           const SizedBox(width: 8),
           TextButton(
             onPressed: () {
