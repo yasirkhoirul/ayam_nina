@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kedai_ayam_nina/core/widgets/animated_scroll_item.dart';
 import 'package:kedai_ayam_nina/core/widgets/card/card_product.dart';
 import 'package:kedai_ayam_nina/features/produk/presentation/bloc/product_catalog_bloc.dart';
 import 'package:kedai_ayam_nina/features/user/presentation/widgets/user_navbar.dart';
@@ -42,25 +43,31 @@ class _CatalogPageState extends State<CatalogPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Our Menu",
-                    style: TextStyle(
-                      fontSize: 48,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: -1,
+                  AnimatedScrollItem(
+                    id: 'catalog_title',
+                    child: const Text(
+                      "Our Menu",
+                      style: TextStyle(
+                        fontSize: 48,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: -1,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    "Discover the golden, crispy perfection of Kedai Ayam Nina. From our signature\noriginal recipe to fiery geprek, every bite is a taste of home.",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black87,
-                      height: 1.5,
+                  AnimatedScrollItem(
+                    id: 'catalog_subtitle',
+                    child: const Text(
+                      "Discover the golden, crispy perfection of Kedai Ayam Nina. From our signature\noriginal recipe to fiery geprek, every bite is a taste of home.",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                        height: 1.5,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 32),
-                  _buildCategories(),
+                  AnimatedScrollItem(id: 'catalog_cats', child: _buildCategories()),
                   const SizedBox(height: 32),
                 ],
               ),
@@ -98,10 +105,13 @@ class _CatalogPageState extends State<CatalogPage> {
                     ),
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        return ProductGridItem(
-                          product: filteredProducts[index],
-                          isAdmin: false,
-                          onDelete: () {}, // No action for user side
+                        return AnimatedScrollItem(
+                          id: 'product_$index',
+                          child: ProductGridItem(
+                            product: filteredProducts[index],
+                            isAdmin: false,
+                            onDelete: () {}, // No action for user side
+                          ),
                         );
                       },
                       childCount: filteredProducts.length,

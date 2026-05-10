@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kedai_ayam_nina/core/widgets/animated_scroll_item.dart';
 import 'package:kedai_ayam_nina/core/widgets/card/card_product.dart';
 import 'package:kedai_ayam_nina/core/widgets/custom_button_gradient.dart';
 import 'package:kedai_ayam_nina/features/produk/presentation/bloc/product_catalog_bloc.dart';
@@ -31,40 +32,30 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       backgroundColor: const Color(0xFFFDFBF0),
       drawer: isDesktop ? null : const UserDrawer(),
-      body: TweenAnimationBuilder<double>(
-        tween: Tween<double>(begin: 0.0, end: 1.0),
-        duration: const Duration(milliseconds: 1200),
-        curve: Curves.easeOutCubic,
-        builder: (context, opacity, child) {
-          return Opacity(
-            opacity: opacity,
-            child: child,
-          );
-        },
-        child: CustomScrollView(
-          slivers: [
-            UserNavBar(isDesktop: isDesktop),
+      body: CustomScrollView(
+        slivers: [
+          UserNavBar(isDesktop: isDesktop),
 
           // Section 1: Hero
           SliverToBoxAdapter(
-            child: _buildHeroSection(isDesktop),
+            child: AnimatedScrollItem(id: 'dash_hero', child: _buildHeroSection(isDesktop)),
           ),
 
           // Section 2: Best Sellers
           SliverToBoxAdapter(
-            child: _buildBestSellersSection(isDesktop),
+            child: AnimatedScrollItem(id: 'dash_best_seller', child: _buildBestSellersSection(isDesktop)),
           ),
 
           // Section 3: Rooted in Tradition
           SliverToBoxAdapter(
-            child: _buildFooterSection(isDesktop),
+            child: AnimatedScrollItem(id: 'dash_footer', child: _buildFooterSection(isDesktop)),
           ),
 
           // Footer
           UserFooter(isDesktop: isDesktop),
         ],
       ),
-    ));
+    );
   }
 
   Widget _buildHeroSection(bool isDesktop) {

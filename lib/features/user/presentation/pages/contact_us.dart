@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kedai_ayam_nina/core/widgets/animated_scroll_item.dart';
 import 'package:kedai_ayam_nina/features/user/presentation/widgets/user_navbar.dart';
 import 'package:kedai_ayam_nina/features/user/presentation/widgets/user_footer.dart';
 import 'package:kedai_ayam_nina/features/user/presentation/widgets/user_drawer.dart';
@@ -26,29 +27,35 @@ class ContactUsPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Contact Us",
-                    style: TextStyle(
-                      fontSize: 48,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: -1,
+                  AnimatedScrollItem(
+                    id: 'contact_title',
+                    child: const Text(
+                      "Contact Us",
+                      style: TextStyle(
+                        fontSize: 48,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: -1,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
-                  const Text(
-                    "Punya pertanyaan atau masukan? Jangan ragu untuk menghubungi kami.",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black87,
-                      height: 1.5,
+                  AnimatedScrollItem(
+                    id: 'contact_desc',
+                    child: const Text(
+                      "Punya pertanyaan atau masukan? Jangan ragu untuk menghubungi kami.",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black87,
+                        height: 1.5,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 32),
-                  _buildContactCard(Icons.email, "Email", "hello@kedaiayamnina.com"),
+                  AnimatedScrollItem(id: 'contact_card_email', child: _buildContactCard(Icons.email, "Email", "hello@kedaiayamnina.com")),
                   const SizedBox(height: 16),
-                  _buildContactCard(Icons.phone, "Phone", "+62 812 3456 7890"),
+                  AnimatedScrollItem(id: 'contact_card_phone', child: _buildContactCard(Icons.phone, "Phone", "+62 812 3456 7890")),
                   const SizedBox(height: 16),
-                  _buildContactCard(Icons.location_on, "Location", "Jl. Ayam Goreng No. 1, Jakarta"),
+                  AnimatedScrollItem(id: 'contact_card_loc', child: _buildContactCard(Icons.location_on, "Location", "Jl. Ayam Goreng No. 1, Jakarta")),
                 ],
               ),
             ),
