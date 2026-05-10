@@ -55,7 +55,7 @@ class ContactUsPage extends StatelessWidget {
                   const SizedBox(height: 16),
                   AnimatedScrollItem(id: 'contact_card_phone', child: _buildContactCard(Icons.phone, "Phone", "+62 895-3832-05337")),
                   const SizedBox(height: 16),
-                  AnimatedScrollItem(id: 'contact_card_loc', child: _buildContactCard(Icons.location_on, "Location", "Yogyakarta, Indonesia")),
+                  AnimatedScrollItem(id: 'contact_card_loc', child: _buildContactCard(Icons.location_on, "Location", "Jakarta Barat, Indonesia")),
                 ],
               ),
             ),
