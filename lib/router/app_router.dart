@@ -86,13 +86,6 @@ class AppRouter {
                 })),
               ],
             ),
-            StatefulShellBranch(routes: [
-              GoRoute(
-                name: MyRoute.signup.name,
-                path: MyRoute.signup.path, builder: (context, state) =>  SignUpPage( onLogin: (){
-                  context.pushNamed(MyRoute.login.name);
-                },)),
-            ])
           ],
         ),
         StatefulShellRoute.indexedStack(

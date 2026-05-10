@@ -92,12 +92,6 @@ class _LoginPageState extends State<LoginPage> {
             );
           },
         ),
-        TextButton(
-          onPressed: () {
-            widget.onSignUp?.call();
-          },
-          child: const Text("Belum punya akun? Daftar"),
-        ),
       ],
     );
   }
