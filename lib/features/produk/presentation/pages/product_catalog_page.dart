@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kedai_ayam_nina/core/widgets/card/card_product.dart';
@@ -10,6 +10,7 @@ class ProductCatalogPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 800;
     return BlocProvider(
       create: (_) => getIt<ProductCatalogBloc>()..add(LoadProducts()),
       child: Scaffold(
@@ -19,28 +20,59 @@ class ProductCatalogPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Product Catalog",
-                    style: Theme.of(context).textTheme.displayLarge,
-                  ),
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFD66B0D),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 16),
+              !isMobile
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Product Catalog",
+                          style: Theme.of(context).textTheme.displayLarge,
+                        ),
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFD66B0D),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 16,
+                            ),
+                          ),
+                          onPressed: () =>
+                              context.go('/admin/catalog/mutation'),
+                          icon: const Icon(Icons.add, color: Colors.white),
+                          label: const Text(
+                            "Add New Product",
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Product Catalog",
+                          style: Theme.of(context).textTheme.displayLarge,
+                        ),
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFD66B0D),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          onPressed: () =>
+                              context.go('/admin/catalog/mutation'),
+                          icon: const Icon(Icons.add, color: Colors.white),
+                          label: const Text(
+                            "Add New Product",
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        ),
+                      ],
                     ),
-                    onPressed: () => context.go('/admin/catalog/mutation'),
-                    icon: const Icon(Icons.add, color: Colors.white),
-                    label: const Text("Add New Product",
-                        style: TextStyle(color: Colors.white, fontSize: 16)),
-                  ),
-                ],
-              ),
               const SizedBox(height: 8),
               const Text("Manage the delightful offerings of Nina's Kitchen."),
               const SizedBox(height: 32),
@@ -48,12 +80,16 @@ class ProductCatalogPage extends StatelessWidget {
                 child: BlocConsumer<ProductCatalogBloc, ProductCatalogState>(
                   listener: (context, state) {
                     if (state is ProductCatalogActionSuccess) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(state.message)));
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(state.message)));
                     } else if (state is ProductCatalogError) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
                           content: Text(state.message),
-                          backgroundColor: Colors.red));
+                          backgroundColor: Colors.red,
+                        ),
+                      );
                     }
                   },
                   builder: (context, state) {
@@ -63,24 +99,31 @@ class ProductCatalogPage extends StatelessWidget {
                     } else if (state is ProductCatalogLoaded) {
                       if (state.products.isEmpty) {
                         return const Center(
-                            child: Text("No products found in the catalog."));
+                          child: Text("No products found in the catalog."),
+                        );
                       }
-                      
+
                       // PERUBAHAN: Menggunakan GridView.builder
                       return GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 320, // Lebar maksimal tiap card
-                          mainAxisExtent: 340, // Tinggi pasti tiap card
-                          crossAxisSpacing: 24, // Jarak horizontal antar card
-                          mainAxisSpacing: 24, // Jarak vertikal antar card
-                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent:
+                                  320, // Lebar maksimal tiap card
+                              mainAxisExtent: 340, // Tinggi pasti tiap card
+                              crossAxisSpacing:
+                                  24, // Jarak horizontal antar card
+                              mainAxisSpacing: 24, // Jarak vertikal antar card
+                            ),
                         itemCount: state.products.length,
                         itemBuilder: (context, index) {
                           final product = state.products[index];
                           return ProductGridItem(
                             product: product,
                             onTapCard: () {
-                              context.go('/admin/catalog/detail', extra: product);
+                              context.go(
+                                '/admin/catalog/detail',
+                                extra: product,
+                              );
                             },
                             onDelete: () {
                               // Logika delete dipindah ke sini agar rapi
@@ -88,7 +131,9 @@ class ProductCatalogPage extends StatelessWidget {
                                 context: context,
                                 builder: (dialogCtx) => AlertDialog(
                                   title: const Text("Delete Product"),
-                                  content: const Text("Are you sure you want to delete ?"),
+                                  content: const Text(
+                                    "Are you sure you want to delete ?",
+                                  ),
                                   actions: [
                                     TextButton(
                                       onPressed: () => Navigator.pop(dialogCtx),
@@ -97,9 +142,14 @@ class ProductCatalogPage extends StatelessWidget {
                                     TextButton(
                                       onPressed: () {
                                         Navigator.pop(dialogCtx);
-                                        context.read<ProductCatalogBloc>().add(DeleteProductEvent(product.id));
+                                        context.read<ProductCatalogBloc>().add(
+                                          DeleteProductEvent(product.id),
+                                        );
                                       },
-                                      child: const Text("Delete", style: TextStyle(color: Colors.red)),
+                                      child: const Text(
+                                        "Delete",
+                                        style: TextStyle(color: Colors.red),
+                                      ),
                                     ),
                                   ],
                                 ),

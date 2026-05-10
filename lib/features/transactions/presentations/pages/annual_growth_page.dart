@@ -94,7 +94,7 @@ class _AnnualGrowthPageState extends State<AnnualGrowthPage> {
                   );
                 }
                 if (state is AnnualGrowthLoaded) {
-                  return _buildDashboard(theme, state.annualGrowth);
+                  return _buildDashboard(context, theme, state.annualGrowth);
                 }
                 return const SizedBox.shrink();
               },
@@ -157,67 +157,88 @@ class _AnnualGrowthPageState extends State<AnnualGrowthPage> {
     );
   }
 
-  Widget _buildDashboard(ThemeData theme, AnnualGrowth data) {
+  Widget _buildDashboard(BuildContext context, ThemeData theme, AnnualGrowth data) {
+    final isSmallScreen = MediaQuery.of(context).size.width < 800;
+
+    final summaryCards = [
+      _SummaryCard(
+        title: "Total Pemasukan",
+        value: _formatCurrency(data.totalPemasukan),
+        growth: data.pemasukanGrowth,
+        icon: Icons.trending_up,
+        color: const Color(0xFF2E7D32),
+        bgColor: const Color(0xFFE8F5E9),
+      ),
+      _SummaryCard(
+        title: "Total Pengeluaran",
+        value: _formatCurrency(data.totalPengeluaran),
+        growth: data.pengeluaranGrowth,
+        icon: Icons.trending_down,
+        color: const Color(0xFFC62828),
+        bgColor: const Color(0xFFFFEBEE),
+        isExpense: true,
+      ),
+      _SummaryCard(
+        title: "Profit Bersih",
+        value: _formatCurrency(data.profitBersih),
+        growth: data.profitGrowth,
+        icon: Icons.account_balance_wallet,
+        color: const Color(0xFFF57C00),
+        bgColor: const Color(0xFFFFF3E0),
+      ),
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Summary Cards
-        Row(
-          children: [
-            Expanded(
-              child: _SummaryCard(
-                title: "Total Pemasukan",
-                value: _formatCurrency(data.totalPemasukan),
-                growth: data.pemasukanGrowth,
-                icon: Icons.trending_up,
-                color: const Color(0xFF2E7D32),
-                bgColor: const Color(0xFFE8F5E9),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _SummaryCard(
-                title: "Total Pengeluaran",
-                value: _formatCurrency(data.totalPengeluaran),
-                growth: data.pengeluaranGrowth,
-                icon: Icons.trending_down,
-                color: const Color(0xFFC62828),
-                bgColor: const Color(0xFFFFEBEE),
-                isExpense: true,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _SummaryCard(
-                title: "Profit Bersih",
-                value: _formatCurrency(data.profitBersih),
-                growth: data.profitGrowth,
-                icon: Icons.account_balance_wallet,
-                color: const Color(0xFFF57C00),
-                bgColor: const Color(0xFFFFF3E0),
-              ),
-            ),
-          ],
-        ),
+        if (isSmallScreen)
+          Column(
+            children: [
+              summaryCards[0],
+              const SizedBox(height: 16),
+              summaryCards[1],
+              const SizedBox(height: 16),
+              summaryCards[2],
+            ],
+          )
+        else
+          Row(
+            children: [
+              Expanded(child: summaryCards[0]),
+              const SizedBox(width: 16),
+              Expanded(child: summaryCards[1]),
+              const SizedBox(width: 16),
+              Expanded(child: summaryCards[2]),
+            ],
+          ),
         const SizedBox(height: 32),
 
         // Charts Row
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Bar Chart
-            Expanded(
-              flex: 3,
-              child: _buildBarChart(theme, data),
-            ),
-            const SizedBox(width: 16),
-            // Profit Line Chart
-            Expanded(
-              flex: 2,
-              child: _buildLineChart(theme, data),
-            ),
-          ],
-        ),
+        if (isSmallScreen)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildBarChart(theme, data),
+              const SizedBox(height: 16),
+              _buildLineChart(theme, data),
+            ],
+          )
+        else
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 3,
+                child: _buildBarChart(theme, data),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                flex: 2,
+                child: _buildLineChart(theme, data),
+              ),
+            ],
+          ),
 
         const SizedBox(height: 32),
 

@@ -49,43 +49,56 @@ class _TransactionMutationState extends State<TransactionMutation> {
                     if (state is TransactionLoading) {
                       return const Center(child: CircularProgressIndicator());
                     }
+
+                    final isSmallScreen = MediaQuery.of(context).size.width < 800;
+
+                    final cardTransactionWidget = CardTransaction(
+                      onSubmit: (Transaction input) {
+                        context.read<TransactionBloc>().add(
+                          CreateTransactionEvent(transaction: input),
+                        );
+                      },
+                    );
+
+                    final listCubitWidget = BlocConsumer<
+                      TransactionListCubit,
+                      TransactionListState
+                    >(
+                      builder: (context, state) {
+                        if (state is TransactionListLoading) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+                        if (state is TransactionListError) {
+                          return Center(child: Text(state.message));
+                        }
+                        if (state is TransactionListLoaded) {
+                          if (state.transactions.isEmpty) {
+                            return const Center(child: Text("No Data"));
+                          }
+                          return CardHistory(transaction: state.transactions);
+                        }
+                        return const Center(child: Text("No Data"));
+                      },
+                      listener: (context, state) {},
+                    );
+
+                    if (isSmallScreen) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          cardTransactionWidget,
+                          const SizedBox(height: 16),
+                          listCubitWidget,
+                        ],
+                      );
+                    }
+
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: 10,
                       children: [
-                        Expanded(
-                          child: CardTransaction(
-                            onSubmit: (Transaction input) {
-                              context.read<TransactionBloc>().add(
-                                CreateTransactionEvent(transaction: input),
-                              );
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          child:
-                              BlocConsumer<
-                                TransactionListCubit,
-                                TransactionListState
-                              >(
-                                builder: (context, state) {
-                                  if (state is TransactionListLoading) {
-                                    return const Center(child: CircularProgressIndicator());
-                                  }
-                                  if (state is TransactionListError) {
-                                    return Center(child: Text(state.message));
-                                  }
-                                  if (state is TransactionListLoaded) {
-                                    if (state.transactions.isEmpty) {
-                                      return Center(child: Text("No Data"));
-                                    }
-                                    return CardHistory(transaction: state.transactions);
-                                  }
-                                  return Center(child: Text("No Data"));
-                                },
-                                listener: (context, state) {},
-                              ),
-                        ),
+                        Expanded(child: cardTransactionWidget),
+                        Expanded(child: listCubitWidget),
                       ],
                     );
                   },
