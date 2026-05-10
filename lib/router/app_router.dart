@@ -14,6 +14,10 @@ import 'package:kedai_ayam_nina/features/produk/presentation/pages/product_mutat
 import 'package:kedai_ayam_nina/features/transactions/presentations/pages/annual_growth_page.dart';
 import 'package:kedai_ayam_nina/features/transactions/presentations/pages/history_page.dart';
 import 'package:kedai_ayam_nina/features/transactions/presentations/pages/transaction_mutation.dart';
+import 'package:kedai_ayam_nina/features/user/presentation/pages/dashboard.dart';
+import 'package:kedai_ayam_nina/features/user/presentation/pages/catalog.dart';
+import 'package:kedai_ayam_nina/features/user/presentation/pages/about_us.dart';
+import 'package:kedai_ayam_nina/features/user/presentation/pages/contact_us.dart';
 import 'package:kedai_ayam_nina/router/listener_router.dart';
 import 'package:kedai_ayam_nina/router/router.dart';
 
@@ -21,7 +25,7 @@ import 'package:kedai_ayam_nina/router/router.dart';
 class AppRouter {
   GoRouter myRouter(BlocBase bloc) {
     return GoRouter(
-      initialLocation: MyRoute.login.path,
+      initialLocation: MyRoute.home.path,
       refreshListenable: ListenerRouter(bloc.stream),
       redirect: (context, state) {
         final admin = [
@@ -49,7 +53,27 @@ class AppRouter {
         
       },
       routes: [
-        GoRoute(path: MyRoute.home.path, builder: (context, state) => Home()),
+    
+        GoRoute(
+          name: MyRoute.home.name,
+          path: MyRoute.home.path, 
+          builder: (context, state) => Dashboard(),
+        ),
+        GoRoute(
+          name: MyRoute.catalog.name,
+          path: MyRoute.catalog.path, 
+          builder: (context, state) => const CatalogPage(),
+        ),
+        GoRoute(
+          name: MyRoute.about.name,
+          path: MyRoute.about.path, 
+          builder: (context, state) => const AboutUsPage(),
+        ),
+        GoRoute(
+          name: MyRoute.contactUs.name,
+          path: MyRoute.contactUs.path, 
+          builder: (context, state) => const ContactUsPage(),
+        ),
         StatefulShellRoute.indexedStack(
           builder: (context, state, navigationShell) => MainScaffoldAuth(navigationShell: navigationShell),
           branches: [

@@ -1,5 +1,8 @@
 ﻿enum MyRoute {
   home("/home"),
+  catalog("/catalog"),
+  about("/about"),
+  contactUs("/contact_us"),
   login("/login"),
   signup("/signup"),
   detail("/detail"),

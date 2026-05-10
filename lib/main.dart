@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kedai_ayam_nina/core/theme.dart';
 import 'package:kedai_ayam_nina/dependency_injection/dependency_injection.dart';
 import 'package:kedai_ayam_nina/features/auth/presentations/bloc/auth_bloc.dart';
+import 'package:kedai_ayam_nina/features/produk/presentation/bloc/product_catalog_bloc.dart';
 import 'package:kedai_ayam_nina/features/transactions/presentations/bloc/transaction_bloc.dart';
 import 'package:kedai_ayam_nina/features/transactions/presentations/cubit/transaction_list_cubit.dart';
 import 'package:kedai_ayam_nina/firebase_options.dart';
@@ -18,7 +19,8 @@ void main() async {
       providers: [
         BlocProvider(create: (context) => getIt<AuthBloc>()),
         BlocProvider(create: (context) => getIt<TransactionBloc>()),
-        BlocProvider(create: (context) => getIt<TransactionListCubit>(),)
+        BlocProvider(create: (context) => getIt<TransactionListCubit>(),),
+        BlocProvider(create: (context) => getIt<ProductCatalogBloc>()..getProducts),
       ],
       child: const MainApp(),
     ),

@@ -7,12 +7,14 @@ class ProductGridItem extends StatefulWidget {
   final Product product; // Sesuaikan dengan tipe model Product kamu
   final VoidCallback onDelete;
   final VoidCallback? onTapCard; // TAMBAHAN: Parameter aksi saat seluruh card diklik
+  final bool isAdmin; // TAMBAHAN: Menyembunyikan icon aksi pada User
 
   const ProductGridItem({
     super.key,
     required this.product,
     required this.onDelete,
     this.onTapCard, // Bisa dikosongkan jika belum butuh
+    this.isAdmin = true, // Default true untuk mencegah error sistem yang sudah ada
   });
 
   @override
@@ -69,26 +71,29 @@ class _ProductGridItemState extends State<ProductGridItem> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // BAGIAN ATAS: Gambar Produk
-              ClipRRect(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(24)),
-                child: Container(
-                  height: 180, // Tinggi gambar di dalam card
-                  width: double.infinity,
-                  color: Colors.grey[300],
-                  child: widget.product.imageUrl.isNotEmpty &&
-                          widget.product.imageUrl.first.startsWith('http')
-                      ? Image.network(
-                          widget.product.imageUrl.first,
-                          fit: BoxFit.cover,
-                        )
-                      : const Center(
-                          child: Icon(Icons.fastfood, color: Colors.grey, size: 50),
-                        ),
+              Expanded(
+                flex: 4,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(24)),
+                  child: Container(
+                    width: double.infinity,
+                    color: Colors.grey[300],
+                    child: widget.product.imageUrl.isNotEmpty &&
+                            widget.product.imageUrl.first.startsWith('http')
+                        ? Image.network(
+                            widget.product.imageUrl.first,
+                            fit: BoxFit.cover,
+                          )
+                        : const Center(
+                            child: Icon(Icons.fastfood, color: Colors.grey, size: 50),
+                          ),
+                  ),
                 ),
               ),
               
               // BAGIAN BAWAH: Informasi & Aksi
               Expanded(
+                flex: 3,
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
@@ -136,25 +141,26 @@ class _ProductGridItemState extends State<ProductGridItem> {
                           ),
                           
                           // Action Buttons (Edit & Delete)
-                          Row(
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.edit, color: iconActionColor, size: 20),
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                                onPressed: () => context.go('/admin/catalog/mutation?id=${widget.product.id}'),
-                                tooltip: "Edit Product",
-                              ),
-                              const SizedBox(width: 12),
-                              IconButton(
-                                icon: Icon(Icons.delete, color: isHovered ? theme.colorScheme.onSecondary : Colors.red, size: 20),
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                                onPressed: widget.onDelete,
-                                tooltip: "Delete Product",
-                              ),
-                            ],
-                          ),
+                          if (widget.isAdmin)
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.edit, color: iconActionColor, size: 20),
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  onPressed: () => context.go('/admin/catalog/mutation?id=${widget.product.id}'),
+                                  tooltip: "Edit Product",
+                                ),
+                                const SizedBox(width: 12),
+                                IconButton(
+                                  icon: Icon(Icons.delete, color: isHovered ? theme.colorScheme.onSecondary : Colors.red, size: 20),
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  onPressed: widget.onDelete,
+                                  tooltip: "Delete Product",
+                                ),
+                              ],
+                            ),
                         ],
                       ),
                     ],
