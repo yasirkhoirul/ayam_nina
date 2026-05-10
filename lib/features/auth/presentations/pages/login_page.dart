@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:kedai_ayam_nina/core/assets.dart';
 import 'package:kedai_ayam_nina/core/constant/enum.dart';
 import 'package:kedai_ayam_nina/core/widgets/snackbarr/custom_snackbar.dart';
 import 'package:kedai_ayam_nina/features/auth/presentations/bloc/auth_bloc.dart';
 import 'package:kedai_ayam_nina/features/auth/presentations/pages/component/login_form.dart';
-import 'package:kedai_ayam_nina/router/router.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback? onSignUp;
@@ -55,7 +53,6 @@ class _LoginPageState extends State<LoginPage> {
                   state: SnackBarState.success,
                 ),
               );
-              context.go(MyRoute.adminCatalog.path);
             }
             if (state is AuthFailure) {
               ScaffoldMessenger.of(context).showSnackBar(

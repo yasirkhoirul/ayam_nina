@@ -36,6 +36,7 @@ class _CardTransactionState extends State<CardTransaction> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 16,
       color: Theme.of(context).colorScheme.onPrimary,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -112,7 +113,8 @@ class _CardTransactionState extends State<CardTransaction> {
                 leadingIcon: Icons.save,
                 text: "Submit",
                 onTap: () {
-                  if (_formKey.currentState!.validate() && _selectedDate != null) {
+                  if (_formKey.currentState!.validate() &&
+                      _selectedDate != null) {
                     // Tentukan jenis dari switcher: 0 = pemasukan, 1 = pengeluaran
                     final jenis = selectedIndex == 0
                         ? JenisTransaksi.pemasukan

@@ -1,5 +1,7 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kedai_ayam_nina/features/auth/presentations/bloc/auth_bloc.dart';
 
 class MainScaffoldAdmin extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -8,66 +10,110 @@ class MainScaffoldAdmin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width >= 800;
+
     return Scaffold(
       backgroundColor: const Color(0xFFFDFBF0),
-      body: Row(
-        children: [
-          Container(
-            width: 260,
-            color: const Color(0xFFF2EFE5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Nina's Kitchen", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF8B4513))),
-                      Text("Admin Terminal", style: TextStyle(fontSize: 12, color: Colors.grey)),
-                    ],
-                  ),
+      appBar: isDesktop
+          ? null
+          : AppBar(
+              backgroundColor: const Color(0xFFF2EFE5),
+              elevation: 0,
+              iconTheme: const IconThemeData(color: Color(0xFF8B4513)),
+              title: const Text(
+                "Nina's Kitchen",
+                style: TextStyle(
+                  color: Color(0xFF8B4513),
+                  fontWeight: FontWeight.bold,
                 ),
-                _SidebarItem(
-                  icon: Icons.dashboard,
-                  label: "Dashboard",
-                  isSelected: navigationShell.currentIndex == 0,
-                  onTap: () => _goBranch(0),
-                ),
-                _SidebarItem(
-                  icon: Icons.restaurant_menu,
-                  label: "Product Catalog",
-                  isSelected: navigationShell.currentIndex == 1,
-                  onTap: () => _goBranch(1),
-                ),
-                _SidebarItem(
-                  icon: Icons.receipt_long,
-                  label: "Order Management",
-                  isSelected: navigationShell.currentIndex == 2,
-                  onTap: () => _goBranch(2),
-                ),
-                _SidebarItem(
-                  icon: Icons.analytics,
-                  label: "Kitchen Analytics",
-                  isSelected: navigationShell.currentIndex == 3,
-                  onTap: () => _goBranch(3),
-                ),
-                const Spacer(),
-                const Divider(),
-                _SidebarItem(icon: Icons.settings, label: "System Settings", isSelected: false, onTap: () {}),
-                _SidebarItem(icon: Icons.logout, label: "Logout", isSelected: false, onTap: () {}),
-                const SizedBox(height: 16),
-              ],
+              ),
             ),
-          ),
-          Expanded(child: navigationShell),
-        ],
-      ),
+      drawer: isDesktop
+          ? null
+          : Drawer(
+              child: Container(
+                color: const Color(0xFFF2EFE5),
+                child: _buildSidebarContent(context, true),
+              ),
+            ),
+      body: isDesktop
+          ? Row(
+              children: [
+                Container(
+                  width: 260,
+                  color: const Color(0xFFF2EFE5),
+                  child: _buildSidebarContent(context, false),
+                ),
+                Expanded(child: navigationShell),
+              ],
+            )
+          : navigationShell,
     );
   }
 
-  void _goBranch(int index) {
-    navigationShell.goBranch(index, initialLocation: index == navigationShell.currentIndex);
+  Widget _buildSidebarContent(BuildContext context, bool isFromDrawer) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Nina's Kitchen",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF8B4513))),
+              Text("Admin Terminal",
+                  style: TextStyle(fontSize: 12, color: Colors.grey)),
+            ],
+          ),
+        ),
+        _SidebarItem(
+          icon: Icons.dashboard,
+          label: "History",
+          isSelected: navigationShell.currentIndex == 0,
+          onTap: () => _handleItemTap(0, context, isFromDrawer),
+        ),
+        _SidebarItem(
+          icon: Icons.restaurant_menu,
+          label: "Product Catalog",
+          isSelected: navigationShell.currentIndex == 1,
+          onTap: () => _handleItemTap(1, context, isFromDrawer),
+        ),
+        _SidebarItem(
+          icon: Icons.receipt_long,
+          label: "Order Management",
+          isSelected: navigationShell.currentIndex == 2,
+          onTap: () => _handleItemTap(2, context, isFromDrawer),
+        ),
+        _SidebarItem(
+          icon: Icons.analytics,
+          label: "Kitchen Analytics",
+          isSelected: navigationShell.currentIndex == 3,
+          onTap: () => _handleItemTap(3, context, isFromDrawer),
+        ),
+        const Spacer(),
+        const Divider(),
+        _SidebarItem(
+            icon: Icons.logout,
+            label: "Logout",
+            isSelected: false,
+            onTap: () {
+              context.read<AuthBloc>().add(AuthLogout());
+            }),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  void _handleItemTap(int index, BuildContext context, bool isFromDrawer) {
+    navigationShell.goBranch(index,
+        initialLocation: index == navigationShell.currentIndex);
+    if (isFromDrawer) {
+      Navigator.of(context).pop();
+    }
   }
 }
 
@@ -123,7 +169,9 @@ class _SidebarItemState extends State<_SidebarItem> {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: widget.onTap,
+            onTap: () {
+              widget.onTap.call();
+            },
             borderRadius: BorderRadius.circular(12),
             splashColor: primaryColor.withOpacity(0.2), // Warna cipratan saat diklik
             highlightColor: Colors.transparent,

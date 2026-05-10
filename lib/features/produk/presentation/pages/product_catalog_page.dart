@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kedai_ayam_nina/core/widgets/card/card_product.dart';
@@ -79,6 +79,9 @@ class ProductCatalogPage extends StatelessWidget {
                           final product = state.products[index];
                           return ProductGridItem(
                             product: product,
+                            onTapCard: () {
+                              context.go('/admin/catalog/detail', extra: product);
+                            },
                             onDelete: () {
                               // Logika delete dipindah ke sini agar rapi
                               showDialog(

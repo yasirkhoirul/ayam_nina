@@ -4,6 +4,7 @@ import '../models/user_model.dart';
 abstract class AuthNetworkDatasource {
   Future<UserModel> login(String email, String password);
   Future<UserModel> register(String email, String password, String name);
+  Stream<User?> watchAuth();
   Future<void> logout();
   Future<UserModel?> getCurrentUser();
 }
@@ -76,5 +77,10 @@ class AuthNetworkDatasourceImpl implements AuthNetworkDatasource {
       default:
         return Exception(e.message ?? 'An unknown error occurred.');
     }
+  }
+  
+  @override
+  Stream<User?> watchAuth() {
+    return _firebaseAuth.authStateChanges();
   }
 }

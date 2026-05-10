@@ -5,6 +5,7 @@ import 'package:kedai_ayam_nina/features/auth/data/datasources/auth_network_data
 import 'package:kedai_ayam_nina/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:kedai_ayam_nina/features/auth/domain/repositories/auth_repository.dart';
 import 'package:kedai_ayam_nina/features/auth/domain/usecases/auth_usecases.dart';
+import 'package:kedai_ayam_nina/features/auth/domain/usecases/watch_auth.dart';
 import 'package:kedai_ayam_nina/features/auth/presentations/bloc/auth_bloc.dart';
 import 'package:kedai_ayam_nina/features/produk/presentation/bloc/product_mutation_bloc.dart';
 import 'package:kedai_ayam_nina/features/produk/presentation/bloc/product_catalog_bloc.dart';
@@ -76,10 +77,11 @@ Future<void> setup() async {
   getIt.registerLazySingleton(() => DeleteTransaction(getIt()));
   getIt.registerLazySingleton(() => GetTransactions(getIt()));
   getIt.registerLazySingleton(() => GetAnnualGrowth(getIt()));
+  getIt.registerLazySingleton(() => WatchAuth(getIt()),);
 
   // === BLOC ===
   getIt.registerLazySingleton<AuthBloc>(
-    () => AuthBloc(login: getIt(), register: getIt(), logout: getIt()),
+    () => AuthBloc(login: getIt(), register: getIt(), logout: getIt(), watchAuth: getIt()),
   );
 
   getIt.registerFactory<ProductCatalogBloc>(

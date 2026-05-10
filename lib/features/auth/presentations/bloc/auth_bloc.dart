@@ -1,4 +1,6 @@
 ﻿import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kedai_ayam_nina/features/auth/domain/usecases/watch_auth.dart';
 import 'package:meta/meta.dart';
 import '../../domain/usecases/auth_usecases.dart';
 
@@ -8,13 +10,24 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final Login login;
   final Register register;
+  final WatchAuth watchAuth;
   final Logout logout;
 
   AuthBloc({
     required this.login,
     required this.register,
-    required this.logout,
+    required this.logout, required this.watchAuth,
   }) : super(AuthInitial()) {
+    watchAuth().listen((user) {
+      add( AuthCheck(user: user));
+    });
+    on<AuthCheck>((event, emit) {
+      if (event.user != null) {
+        emit(AuthSuccess());
+      } else {
+        emit(AuthInitial());
+      }
+    });
     on<AuthLogin>(_onAuthLogin);
     on<AuthRegister>(_onAuthRegister);
     on<AuthLogout>(_onAuthLogout);
@@ -24,7 +37,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       emit(AuthInProgress());
       await login(event.email, event.password);
-      emit(AuthSuccess());
     } catch (e) {
       emit(AuthFailure(message: e.toString().replaceAll('Exception: ', '')));
     }
@@ -34,7 +46,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       emit(AuthInProgress());
       await register(event.email, event.password, event.name);
-      emit(AuthSuccess());
     } catch (e) {
       emit(AuthFailure(message: e.toString().replaceAll('Exception: ', '')));
     }

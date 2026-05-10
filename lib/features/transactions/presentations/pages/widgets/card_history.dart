@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:kedai_ayam_nina/core/utils/rupiah_formatter.dart';
 import 'package:kedai_ayam_nina/core/widgets/card/card_gradient.dart';
 import 'package:kedai_ayam_nina/core/widgets/chip/custom_chip.dart';
-import 'package:kedai_ayam_nina/features/transactions/domain/entities/history.dart';
 import 'package:kedai_ayam_nina/features/transactions/domain/entities/transaction.dart';
 import 'package:kedai_ayam_nina/features/transactions/presentations/pages/widgets/card_history_item.dart';
+import 'package:kedai_ayam_nina/router/router.dart';
 
 class CardHistory extends StatelessWidget {
   final List<Transaction> transaction;
@@ -11,33 +13,11 @@ class CardHistory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dummy = [
-      History(
-        id: "1",
-        date: "2023-01-01",
-        category: "Makanan",
-        amount: 10000,
-        description: "Beli nasi goreng",
-      ),
-      History(
-        id: "2",
-        date: "2023-01-01",
-        category: "Makanan1",
-        amount: 10000,
-        description: "Beli nasi goreng",
-      ),
-      History(
-        id: "3",
-        date: "2023-01-01",
-        category: "Makanan2",
-        amount: 10000,
-        description: "Beli nasi goreng",
-      ),
-    ];
     return Column(
       spacing: 10,
       children: [
         Card(
+          elevation: 16,
           color: Theme.of(context).colorScheme.onSecondary,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -51,19 +31,24 @@ class CardHistory extends StatelessWidget {
                       "History Transaksi",
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    TextButton(onPressed: () {}, child: Text("Lihat Semua")),
+                    TextButton(
+                      onPressed: () => context.push(MyRoute.historyPage.path),
+                      child: const Text("Lihat Semua"),
+                    ),
                   ],
                 ),
                 ListView.builder(
                   shrinkWrap: true,
-                  itemCount: transaction.length,
+                  itemCount: transaction.length > 5 ? 5 : transaction.length,
                   itemBuilder: (context, index) => CardHistoryItem(
-                    isPengeluaran: transaction[index].jenis.name == 'pengeluaran',
+                    isPengeluaran:
+                        transaction[index].jenis.name == 'pengeluaran',
                     tittle: transaction[index].kategori.label,
-                    date: "${transaction[index].tanggal.day.toString().padLeft(2, '0')}/${transaction[index].tanggal.month.toString().padLeft(2, '0')}/${transaction[index].tanggal.year}",
-                    nominal: "Rp ${transaction[index].nominal.abs().toStringAsFixed(0)}",
+                    date:
+                        "${transaction[index].tanggal.day.toString().padLeft(2, '0')}/${transaction[index].tanggal.month.toString().padLeft(2, '0')}/${transaction[index].tanggal.year}",
+                    nominal: formatRupiah(transaction[index].nominal),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -80,7 +65,7 @@ class CardHistory extends StatelessWidget {
                 ),
               ),
               Text(
-                "Total Pengeluaran: Rp 30.000",
+                "Total 5 Transaksi Terakhir:",
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSecondary,
                 ),
@@ -88,7 +73,12 @@ class CardHistory extends StatelessWidget {
               Row(
                 children: [
                   CustomTrendChip(
-                    text: "12 % kenaikan",
+                    text: formatNumber(
+                      transaction
+                          .take(transaction.length > 5 ? 5 : transaction.length)
+                          .where((element) => element.jenis.name == 'pengeluaran')
+                          .fold(0, (previousValue, element) => previousValue + element.nominal)
+                    ),
                     icon: Icons.trending_up,
                   ),
                 ],

@@ -15,7 +15,7 @@ class MainScaffoldAuth extends StatelessWidget {
               onPressed: () {},
               icon: Icon(Icons.arrow_back_ios,color: Theme.of(context).colorScheme.primary,),
             ),
-            Text("Kembali ke Halaman Login",style: Theme.of(context).textTheme.labelLarge?.copyWith(
+            Text("Kembali ke Dashboard",style: Theme.of(context).textTheme.labelLarge?.copyWith(
               color: Theme.of(context).colorScheme.primary,
             ),),
           ],

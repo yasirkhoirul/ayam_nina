@@ -40,7 +40,11 @@ class _TransactionMutationState extends State<TransactionMutation> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: BlocConsumer<TransactionBloc, TransactionState>(
-                  listener: (context, state) {},
+                  listener: (context, state) {
+                    if (state is TransactionSuccess) {
+                      context.read<TransactionListCubit>().fetchTransactions();
+                    }
+                  },
                   builder: (context, state) {
                     if (state is TransactionLoading) {
                       return const Center(child: CircularProgressIndicator());

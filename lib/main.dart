@@ -30,11 +30,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authState = context.read<AuthBloc>();
     return MaterialApp.router(
       theme: AppTheme.lightTheme(),
       darkTheme: AppTheme.darkTheme(),
       themeMode: ThemeMode.light,
-      routerConfig: AppRouter().myRouter(),
+      routerConfig: AppRouter().myRouter(authState),
     );
   }
 }

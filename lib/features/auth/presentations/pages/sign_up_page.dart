@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:kedai_ayam_nina/core/assets.dart';
 import 'package:kedai_ayam_nina/core/constant/enum.dart';
 import 'package:kedai_ayam_nina/core/widgets/snackbarr/custom_snackbar.dart';
 import 'package:kedai_ayam_nina/features/auth/presentations/bloc/auth_bloc.dart';
 import 'package:kedai_ayam_nina/features/auth/presentations/pages/component/signup_form.dart';
-import 'package:kedai_ayam_nina/router/router.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+  final VoidCallback onLogin;
+  const SignUpPage({super.key, required this.onLogin});
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
@@ -60,7 +59,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   state: SnackBarState.success,
                 ),
               );
-              context.go(MyRoute.adminCatalog.path);
             }
             if (state is AuthFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -91,6 +89,12 @@ class _SignUpPageState extends State<SignUpPage> {
               },
             );
           },
+        ),
+        TextButton(
+          onPressed: () {
+            widget.onLogin.call();
+          },
+          child: const Text("Sudah punya akun? Masuk"),
         ),
       ],
     );

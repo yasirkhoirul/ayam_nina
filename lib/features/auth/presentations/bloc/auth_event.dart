@@ -25,3 +25,8 @@ final class AuthRegister extends AuthEvent {
 }
 
 final class AuthLogout extends AuthEvent {}
+
+final class AuthCheck extends AuthEvent {
+  final User? user;
+  AuthCheck({required this.user});
+}

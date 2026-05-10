@@ -1,21 +1,53 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kedai_ayam_nina/core/widgets/main_scaffold_admin.dart';
+import 'package:kedai_ayam_nina/features/auth/presentations/bloc/auth_bloc.dart';
 import 'package:kedai_ayam_nina/features/auth/presentations/pages/component/main_scaffold_auth.dart';
 import 'package:kedai_ayam_nina/features/auth/presentations/pages/login_page.dart';
 import 'package:kedai_ayam_nina/features/auth/presentations/pages/sign_up_page.dart';
 import 'package:kedai_ayam_nina/features/home/pages/home.dart';
+import 'package:kedai_ayam_nina/features/produk/domain/entities/product.dart';
+import 'package:kedai_ayam_nina/features/produk/presentation/pages/detail_product.dart';
 import 'package:kedai_ayam_nina/features/produk/presentation/pages/product_catalog_page.dart';
 import 'package:kedai_ayam_nina/features/produk/presentation/pages/product_mutation_page.dart';
 import 'package:kedai_ayam_nina/features/transactions/presentations/pages/annual_growth_page.dart';
+import 'package:kedai_ayam_nina/features/transactions/presentations/pages/history_page.dart';
 import 'package:kedai_ayam_nina/features/transactions/presentations/pages/transaction_mutation.dart';
+import 'package:kedai_ayam_nina/router/listener_router.dart';
 import 'package:kedai_ayam_nina/router/router.dart';
 
+
 class AppRouter {
-  GoRouter myRouter({BlocBase? bloc}) {
+  GoRouter myRouter(BlocBase bloc) {
     return GoRouter(
       initialLocation: MyRoute.login.path,
+      refreshListenable: ListenerRouter(bloc.stream),
+      redirect: (context, state) {
+        final admin = [
+          MyRoute.adminDashboard.path,
+          MyRoute.adminCatalog.path,
+          MyRoute.adminOrders.path,
+          MyRoute.adminAnalytics.path
+        ];
+        
+        if (admin.contains(state.fullPath)) {
+          if (bloc.state is! AuthSuccess) {
+            return MyRoute.login.path;
+          }else{
+            null;
+          }
+        }else{
+          if (state.fullPath == MyRoute.login.path || state.fullPath == MyRoute.signup.path) {
+            if (bloc.state is AuthSuccess) {
+              return MyRoute.adminCatalog.path;
+            }else{
+              null;
+            }
+          }
+        }
+        
+      },
       routes: [
         GoRoute(path: MyRoute.home.path, builder: (context, state) => Home()),
         StatefulShellRoute.indexedStack(
@@ -23,7 +55,9 @@ class AppRouter {
           branches: [
             StatefulShellBranch(
               routes: [
-                GoRoute(path: MyRoute.login.path, builder: (context, state) => LoginPage(onSignUp: (){
+                GoRoute(
+                  name: MyRoute.login.name,
+                  path: MyRoute.login.path, builder: (context, state) => LoginPage(onSignUp: (){
                   context.pushNamed(MyRoute.signup.name);
                 })),
               ],
@@ -31,14 +65,16 @@ class AppRouter {
             StatefulShellBranch(routes: [
               GoRoute(
                 name: MyRoute.signup.name,
-                path: MyRoute.signup.path, builder: (context, state) => const SignUpPage()),
+                path: MyRoute.signup.path, builder: (context, state) =>  SignUpPage( onLogin: (){
+                  context.pushNamed(MyRoute.login.name);
+                },)),
             ])
           ],
         ),
         StatefulShellRoute.indexedStack(
           builder: (context, state, navigationShell) => MainScaffoldAdmin(navigationShell: navigationShell),
           branches: [
-            StatefulShellBranch(routes: [ GoRoute(path: '/admin/dashboard', builder: (context, state) => const Scaffold(body: Center(child: Text("Dashboard")))) ]),
+            StatefulShellBranch(routes: [ GoRoute(path: MyRoute.adminDashboard.path, builder: (context, state) => const HistoryPage()) ]),
             StatefulShellBranch(
               routes: [
                 GoRoute(
@@ -49,12 +85,19 @@ class AppRouter {
                       path: 'mutation',
                       builder: (context, state) => ProductMutationPage(productId: state.uri.queryParameters['id']), 
                     ),
+                    GoRoute(
+                      path: 'detail',
+                      builder: (context, state) {
+                        final product = state.extra as Product;
+                        return DetailProductPage(product: product);
+                      },
+                    ),
                   ],
                 ),
               ],
             ),
-            StatefulShellBranch(routes: [ GoRoute(path: '/admin/orders', builder: (context, state) => const TransactionMutation()) ]),
-            StatefulShellBranch(routes: [ GoRoute(path: '/admin/analytics', builder: (context, state) => const AnnualGrowthPage()) ]),
+            StatefulShellBranch(routes: [ GoRoute(path: MyRoute.adminOrders.path, builder: (context, state) => const TransactionMutation()) ]),
+            StatefulShellBranch(routes: [ GoRoute(path: MyRoute.adminAnalytics.path, builder: (context, state) => const AnnualGrowthPage()) ]),
           ],
         ),
       ],

@@ -1,4 +1,6 @@
-﻿import '../../domain/entities/user_entity.dart';
+﻿import 'package:firebase_auth/firebase_auth.dart';
+
+import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_network_datasource.dart';
 
@@ -25,5 +27,10 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<UserEntity?> getCurrentUser() async {
     return await networkDatasource.getCurrentUser();
+  }
+
+  @override
+  Stream<User?> watchAuth() {
+    return networkDatasource.watchAuth();
   }
 }
