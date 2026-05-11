@@ -43,7 +43,7 @@ class AboutUsPage extends StatelessWidget {
                   AnimatedScrollItem(
                     id: 'about_desc',
                     child: const Text(
-                      "Kedai Ayam Nina adalah rumah bagi pencinta ayam goreng sejati. Didirikan di jantung kota Yogyakarta pada tahun 2023, kami berkomitmen menghadirkan pengalaman kuliner yang tak terlupakan. Perpaduan resep tradisional Nusantara, rempah pilihan, dan dedikasi tinggi menjadi rahasia di balik kelezatan setiap sajian kami.",
+                      "Kedai Ayam Nina adalah rumah bagi pencinta ayam goreng sejati. Didirikan di jantung Jakarta Barat pada tahun 2023, kami berkomitmen menghadirkan pengalaman kuliner yang tak terlupakan. Nama Ayam Nina sendiri kami abadikan dari nama putri tercinta, sebagai simbol kasih sayang dan ketulusan yang kami tuangkan dalam setiap masakan.",
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.black87,
