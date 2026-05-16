@@ -22,7 +22,7 @@ void main() async {
         BlocProvider(create: (context) => getIt<TransactionListCubit>(),),
         BlocProvider(create: (context) => getIt<ProductCatalogBloc>()..getProducts),
       ],
-      child: const (),
+      child: const MainApp(),
     ),
   );
 }
