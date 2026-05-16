@@ -28,28 +28,28 @@ class AppRouter {
       initialLocation: MyRoute.home.path,
       refreshListenable: ListenerRouter(bloc.stream),
       redirect: (context, state) {
-        final admin = [
-          MyRoute.adminDashboard.path,
-          MyRoute.adminCatalog.path,
-          MyRoute.adminOrders.path,
-          MyRoute.adminAnalytics.path
-        ];
+        // final admin = [
+        //   MyRoute.adminDashboard.path,
+        //   MyRoute.adminCatalog.path,
+        //   MyRoute.adminOrders.path,
+        //   MyRoute.adminAnalytics.path
+        // ];
         
-        if (admin.contains(state.fullPath)) {
-          if (bloc.state is! AuthSuccess) {
-            return MyRoute.login.path;
-          }else{
-            null;
-          }
-        }else{
-          if (state.fullPath == MyRoute.login.path || state.fullPath == MyRoute.signup.path) {
-            if (bloc.state is AuthSuccess) {
-              return MyRoute.adminAnalytics.path;
-            }else{
-              null;
-            }
-          }
-        }
+        // if (admin.contains(state.fullPath)) {
+        //   if (bloc.state is! AuthSuccess) {
+        //     return MyRoute.login.path;
+        //   }else{
+        //     null;
+        //   }
+        // }else{
+        //   if (state.fullPath == MyRoute.login.path || state.fullPath == MyRoute.signup.path) {
+        //     if (bloc.state is AuthSuccess) {
+        //       return MyRoute.adminAnalytics.path;
+        //     }else{
+        //       null;
+        //     }
+        //   }
+        // }
         
       },
       routes: [
@@ -59,64 +59,64 @@ class AppRouter {
           path: MyRoute.home.path, 
           builder: (context, state) => Dashboard(),
         ),
-        GoRoute(
-          name: MyRoute.catalog.name,
-          path: MyRoute.catalog.path, 
-          builder: (context, state) => const CatalogPage(),
-        ),
-        GoRoute(
-          name: MyRoute.about.name,
-          path: MyRoute.about.path, 
-          builder: (context, state) => const AboutUsPage(),
-        ),
-        GoRoute(
-          name: MyRoute.contactUs.name,
-          path: MyRoute.contactUs.path, 
-          builder: (context, state) => const ContactUsPage(),
-        ),
-        StatefulShellRoute.indexedStack(
-          builder: (context, state, navigationShell) => MainScaffoldAuth(navigationShell: navigationShell),
-          branches: [
-            StatefulShellBranch(
-              routes: [
-                GoRoute(
-                  name: MyRoute.login.name,
-                  path: MyRoute.login.path, builder: (context, state) => LoginPage(onSignUp: (){
-                  context.pushNamed(MyRoute.signup.name);
-                })),
-              ],
-            ),
-          ],
-        ),
-        StatefulShellRoute.indexedStack(
-          builder: (context, state, navigationShell) => MainScaffoldAdmin(navigationShell: navigationShell),
-          branches: [
-            StatefulShellBranch(routes: [ GoRoute(path: MyRoute.adminDashboard.path, builder: (context, state) => const HistoryPage()) ]),
-            StatefulShellBranch(
-              routes: [
-                GoRoute(
-                  path: MyRoute.adminCatalog.path,
-                  builder: (context, state) => const ProductCatalogPage(),
-                  routes: [
-                    GoRoute(
-                      path: 'mutation',
-                      builder: (context, state) => ProductMutationPage(productId: state.uri.queryParameters['id']), 
-                    ),
-                    GoRoute(
-                      path: 'detail',
-                      builder: (context, state) {
-                        final product = state.extra as Product;
-                        return DetailProductPage(product: product);
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            StatefulShellBranch(routes: [ GoRoute(path: MyRoute.adminOrders.path, builder: (context, state) => const TransactionMutation()) ]),
-            StatefulShellBranch(routes: [ GoRoute(path: MyRoute.adminAnalytics.path, builder: (context, state) => const AnnualGrowthPage()) ]),
-          ],
-        ),
+        // GoRoute(
+        //   name: MyRoute.catalog.name,
+        //   path: MyRoute.catalog.path, 
+        //   builder: (context, state) => const CatalogPage(),
+        // ),
+        // GoRoute(
+        //   name: MyRoute.about.name,
+        //   path: MyRoute.about.path, 
+        //   builder: (context, state) => const AboutUsPage(),
+        // ),
+        // GoRoute(
+        //   name: MyRoute.contactUs.name,
+        //   path: MyRoute.contactUs.path, 
+        //   builder: (context, state) => const ContactUsPage(),
+        // ),
+        // StatefulShellRoute.indexedStack(
+        //   builder: (context, state, navigationShell) => MainScaffoldAuth(navigationShell: navigationShell),
+        //   branches: [
+        //     StatefulShellBranch(
+        //       routes: [
+        //         GoRoute(
+        //           name: MyRoute.login.name,
+        //           path: MyRoute.login.path, builder: (context, state) => LoginPage(onSignUp: (){
+        //           context.pushNamed(MyRoute.signup.name);
+        //         })),
+        //       ],
+        //     ),
+        //   ],
+        // ),
+        // StatefulShellRoute.indexedStack(
+        //   builder: (context, state, navigationShell) => MainScaffoldAdmin(navigationShell: navigationShell),
+        //   branches: [
+        //     StatefulShellBranch(routes: [ GoRoute(path: MyRoute.adminDashboard.path, builder: (context, state) => const HistoryPage()) ]),
+        //     StatefulShellBranch(
+        //       routes: [
+        //         GoRoute(
+        //           path: MyRoute.adminCatalog.path,
+        //           builder: (context, state) => const ProductCatalogPage(),
+        //           routes: [
+        //             GoRoute(
+        //               path: 'mutation',
+        //               builder: (context, state) => ProductMutationPage(productId: state.uri.queryParameters['id']), 
+        //             ),
+        //             GoRoute(
+        //               path: 'detail',
+        //               builder: (context, state) {
+        //                 final product = state.extra as Product;
+        //                 return DetailProductPage(product: product);
+        //               },
+        //             ),
+        //           ],
+        //         ),
+        //       ],
+        //     ),
+        //     StatefulShellBranch(routes: [ GoRoute(path: MyRoute.adminOrders.path, builder: (context, state) => const TransactionMutation()) ]),
+        //     StatefulShellBranch(routes: [ GoRoute(path: MyRoute.adminAnalytics.path, builder: (context, state) => const AnnualGrowthPage()) ]),
+        //   ],
+        // ),
       ],
     );
   }

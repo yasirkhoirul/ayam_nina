@@ -36,24 +36,24 @@ class _DashboardState extends State<Dashboard> {
       bottomNavigationBar: UserFooter(isDesktop: isDesktop),
       body: CustomScrollView(
         slivers: [
-          UserNavBar(isDesktop: isDesktop),
+          // UserNavBar(isDesktop: isDesktop),
 
-          // Section 1: Hero
-          SliverToBoxAdapter(
-            child: AnimatedScrollItem(id: 'dash_hero', child: _buildHeroSection(isDesktop)),
-          ),
+          // // Section 1: Hero
+          // SliverToBoxAdapter(
+          //   child: AnimatedScrollItem(id: 'dash_hero', child: _buildHeroSection(isDesktop)),
+          // ),
 
-          // Section 2: Best Sellers
-          SliverToBoxAdapter(
-            child: AnimatedScrollItem(id: 'dash_best_seller', child: _buildBestSellersSection(isDesktop)),
-          ),
+          // // Section 2: Best Sellers
+          // SliverToBoxAdapter(
+          //   child: AnimatedScrollItem(id: 'dash_best_seller', child: _buildBestSellersSection(isDesktop)),
+          // ),
 
-          // Section 3: Rooted in Tradition
-          SliverToBoxAdapter(
-            child: AnimatedScrollItem(id: 'dash_footer', child: _buildFooterSection(isDesktop)),
-          ),
+          // // Section 3: Rooted in Tradition
+          // SliverToBoxAdapter(
+          //   child: AnimatedScrollItem(id: 'dash_footer', child: _buildFooterSection(isDesktop)),
+          // ),
 
-          // Footer
+          // // Footer
           
         ],
       ),
