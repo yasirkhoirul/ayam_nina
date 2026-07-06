@@ -65,15 +65,6 @@ class UserDrawer extends StatelessWidget {
             },
           ),
           const Spacer(),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.login, color: Color(0xFF8B4513)),
-            title: const Text("Admin Login", style: TextStyle(color: Color(0xFF8B4513), fontWeight: FontWeight.bold)),
-            onTap: () {
-              Navigator.pop(context);
-              context.goNamed(MyRoute.login.name);
-            },
-          ),
           const SizedBox(height: 24),
         ],
       ),

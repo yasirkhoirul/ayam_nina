@@ -148,7 +148,7 @@ class _ProductGridItemState extends State<ProductGridItem> {
                                   icon: Icon(Icons.edit, color: iconActionColor, size: 20),
                                   padding: EdgeInsets.zero,
                                   constraints: const BoxConstraints(),
-                                  onPressed: () => context.go('/admin/catalog/mutation?id=${widget.product.id}'),
+                                  onPressed: () => context.go('/admin/catalog/mutation', extra: widget.product),
                                   tooltip: "Edit Product",
                                 ),
                                 const SizedBox(width: 12),

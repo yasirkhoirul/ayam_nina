@@ -1,4 +1,4 @@
-﻿import 'dart:io';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,9 +10,9 @@ import '../../domain/entities/product.dart';
 import '../bloc/product_mutation_bloc.dart';
 
 class ProductMutationPage extends StatefulWidget {
-  final String? productId;
+  final Product? product;
 
-  const ProductMutationPage({super.key, this.productId});
+  const ProductMutationPage({super.key, this.product});
 
   @override
   State<ProductMutationPage> createState() => _ProductMutationPageState();
@@ -28,6 +28,21 @@ class _ProductMutationPageState extends State<ProductMutationPage> {
   String? _selectedCategory;
   String _imageUrlPreview = "";
   XFile? _pickedImage;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.product != null) {
+      _nameController.text = widget.product!.name;
+      _priceController.text = widget.product!.price.toStringAsFixed(0);
+      _descController.text = widget.product!.description;
+      _shortDescController.text = widget.product!.shortDescription;
+      _selectedCategory = widget.product!.category;
+      if (widget.product!.imageUrl.isNotEmpty) {
+        _imageUrlPreview = widget.product!.imageUrl.first;
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -51,8 +66,8 @@ class _ProductMutationPageState extends State<ProductMutationPage> {
 
   @override
   Widget build(BuildContext context) {
-    Logger().i("Building ProductMutationPage with productId: ${widget.productId}");
-    final bool isUpdate = widget.productId != null;
+    Logger().i("Building ProductMutationPage with productId: ${widget.product?.id}");
+    final bool isUpdate = widget.product != null;
 
     return BlocProvider(
       create: (_) => getIt<ProductMutationBloc>(),
@@ -249,16 +264,12 @@ class _ProductMutationPageState extends State<ProductMutationPage> {
                                   : () {
                                       if (_formKey.currentState!.validate() &&
                                           _selectedCategory != null) {
-                                        final product = Product(
-                                          id: widget.productId ?? '',
+                                          final product = Product(
+                                          id: widget.product?.id ?? '',
                                           name: _nameController.text,
                                           category: _selectedCategory!,
                                           description: _descController.text,
-                                          shortDescription:
-                                              _descController.text.length > 50
-                                                  ? _descController.text
-                                                      .substring(0, 50)
-                                                  : _descController.text,
+                                          shortDescription: _shortDescController.text,
                                           price: double.parse(
                                             _priceController.text,
                                           ),

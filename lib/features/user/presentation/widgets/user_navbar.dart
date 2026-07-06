@@ -82,15 +82,6 @@ class UserNavBar extends StatelessWidget {
           ),
           const SizedBox(width: 16),
         ],
-        
-        const SizedBox(width: 8),
-        IconButton(
-          onPressed: () {
-            context.goNamed(MyRoute.login.name);
-          },
-          icon: const Icon(Icons.account_circle, color: Color(0xFF8B4513)),
-        ),
-        const SizedBox(width: 16),
       ],
     );
   }

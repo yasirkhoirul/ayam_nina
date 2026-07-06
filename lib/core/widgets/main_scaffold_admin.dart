@@ -1,7 +1,30 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kedai_ayam_nina/features/auth/presentations/bloc/auth_bloc.dart';
+
+class AdminShellProvider extends InheritedWidget {
+  final StatefulNavigationShell navigationShell;
+
+  const AdminShellProvider({
+    super.key,
+    required this.navigationShell,
+    required super.child,
+  });
+
+  static StatefulNavigationShell of(BuildContext context) {
+    final provider = context.dependOnInheritedWidgetOfExactType<AdminShellProvider>();
+    if (provider == null) {
+      throw Exception('AdminShellProvider not found in context');
+    }
+    return provider.navigationShell;
+  }
+
+  @override
+  bool updateShouldNotify(AdminShellProvider oldWidget) {
+    return navigationShell.currentIndex != oldWidget.navigationShell.currentIndex;
+  }
+}
 
 class MainScaffoldAdmin extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -36,18 +59,21 @@ class MainScaffoldAdmin extends StatelessWidget {
                 child: _buildSidebarContent(context, true),
               ),
             ),
-      body: isDesktop
-          ? Row(
-              children: [
-                Container(
-                  width: 260,
-                  color: const Color(0xFFF2EFE5),
-                  child: _buildSidebarContent(context, false),
-                ),
-                Expanded(child: navigationShell),
-              ],
-            )
-          : navigationShell,
+      body: AdminShellProvider(
+        navigationShell: navigationShell,
+        child: isDesktop
+            ? Row(
+                children: [
+                  Container(
+                    width: 260,
+                    color: const Color(0xFFF2EFE5),
+                    child: _buildSidebarContent(context, false),
+                  ),
+                  Expanded(child: navigationShell),
+                ],
+              )
+            : navigationShell,
+      ),
     );
   }
 

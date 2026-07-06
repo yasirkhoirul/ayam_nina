@@ -41,7 +41,7 @@ class ProductNetworkDatasourceImpl implements ProductNetworkDatasource {
         'price': product.price.toString(),
         'type': product.category,
         'longDescription': product.description,
-        'shortDescription': product.description,
+        'shortDescription': product.shortDescription,
       };
 
       // 2. Perbaiki Pengecekan Gambar Baru
@@ -85,7 +85,7 @@ class ProductNetworkDatasourceImpl implements ProductNetworkDatasource {
         'price': product.price.toString(),
         'type': product.category,
         'longDescription': product.description,
-        'shortDescription': product.description,
+        'shortDescription': product.shortDescription,
       });
 
       // Gunakan XFile dan .readAsBytes() agar kompatibel lintas platform (Web blob: & Native path)

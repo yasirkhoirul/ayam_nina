@@ -53,6 +53,11 @@ class _DashboardState extends State<Dashboard> {
             child: AnimatedScrollItem(id: 'dash_footer', child: _buildFooterSection(isDesktop)),
           ),
 
+          // Section 4: Contact Us
+          SliverToBoxAdapter(
+            child: AnimatedScrollItem(id: 'dash_contact', child: _buildContactUsSection(isDesktop)),
+          ),
+
           // Footer
           
         ],
@@ -93,7 +98,7 @@ class _DashboardState extends State<Dashboard> {
           height: 60,
           width: 60,
           decoration: BoxDecoration(
-            color: Colors.black,
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
@@ -128,8 +133,10 @@ class _DashboardState extends State<Dashboard> {
         SizedBox(
           width: 250,
           child: CustomGradientButton(
-            text: "Order the Chef's Special",
-            onTap: () {},
+            text: "View All Menu",
+            onTap: () {
+              context.goNamed(MyRoute.catalog.name);
+            },
           ),
         ),
       ],
@@ -210,6 +217,7 @@ class _DashboardState extends State<Dashboard> {
                               product: product1,
                               isAdmin: false,
                               onDelete: () {}, // Kosongkan action untuk tampilan dashboard
+                              onTapCard: () => context.pushNamed(MyRoute.detail.name, extra: product1),
                             ),
                           ),
                         if (product2 != null) ...[
@@ -219,6 +227,7 @@ class _DashboardState extends State<Dashboard> {
                               product: product2,
                               isAdmin: false,
                               onDelete: () {},
+                              onTapCard: () => context.pushNamed(MyRoute.detail.name, extra: product2),
                             ),
                           ),
                         ],
@@ -235,6 +244,7 @@ class _DashboardState extends State<Dashboard> {
                             product: product1,
                             isAdmin: false,
                             onDelete: () {},
+                            onTapCard: () => context.pushNamed(MyRoute.detail.name, extra: product1),
                           ),
                         ),
                       if (product2 != null) ...[
@@ -245,6 +255,7 @@ class _DashboardState extends State<Dashboard> {
                             product: product2,
                             isAdmin: false,
                             onDelete: () {},
+                            onTapCard: () => context.pushNamed(MyRoute.detail.name, extra: product2),
                           ),
                         ),
                       ]
@@ -309,7 +320,9 @@ class _DashboardState extends State<Dashboard> {
         ),
         const SizedBox(height: 32),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            context.goNamed(MyRoute.about.name);
+          },
           style: TextButton.styleFrom(padding: EdgeInsets.zero),
           child: const Row(
             mainAxisSize: MainAxisSize.min,
@@ -333,6 +346,90 @@ class _DashboardState extends State<Dashboard> {
           image: NetworkImage("https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1000&auto=format&fit=crop"), // Placeholder Chef
           fit: BoxFit.cover,
         ),
+      ),
+    );
+  }
+
+  Widget _buildContactUsSection(bool isDesktop) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: isDesktop ? 64.0 : 24.0,
+        vertical: 48.0,
+      ),
+      color: const Color(0xFFFDFBF0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Contact Us",
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              letterSpacing: -1,
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            "Punya pertanyaan atau masukan? Jangan ragu untuk menghubungi kami.",
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black87,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 32),
+          _buildContactCard(Icons.phone, "Phone", "+62 895-3832-05337"),
+          const SizedBox(height: 16),
+          _buildContactCard(Icons.location_on, "Location", "Jakarta Barat, Indonesia"),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContactCard(IconData icon, String title, String content) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFDFBF0),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: const Color(0xFF8B4513)),
+          ),
+          const SizedBox(width: 24),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.grey),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                content,
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }

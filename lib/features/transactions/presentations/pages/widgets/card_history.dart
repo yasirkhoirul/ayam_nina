@@ -6,6 +6,7 @@ import 'package:kedai_ayam_nina/core/widgets/chip/custom_chip.dart';
 import 'package:kedai_ayam_nina/features/transactions/domain/entities/transaction.dart';
 import 'package:kedai_ayam_nina/features/transactions/presentations/pages/widgets/card_history_item.dart';
 import 'package:kedai_ayam_nina/router/router.dart';
+import 'package:kedai_ayam_nina/core/widgets/main_scaffold_admin.dart';
 
 class CardHistory extends StatelessWidget {
   final List<Transaction> transaction;
@@ -32,7 +33,8 @@ class CardHistory extends StatelessWidget {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     TextButton(
-                      onPressed: () => context.push(MyRoute.historyPage.path),
+                      onPressed: () =>
+                          AdminShellProvider.of(context).goBranch(0),
                       child: const Text("Lihat Semua"),
                     ),
                   ],
@@ -76,8 +78,14 @@ class CardHistory extends StatelessWidget {
                     text: formatNumber(
                       transaction
                           .take(transaction.length > 5 ? 5 : transaction.length)
-                          .where((element) => element.jenis.name == 'pengeluaran')
-                          .fold(0, (previousValue, element) => previousValue + element.nominal)
+                          .where(
+                            (element) => element.jenis.name == 'pengeluaran',
+                          )
+                          .fold(
+                            0,
+                            (previousValue, element) =>
+                                previousValue + element.nominal,
+                          ),
                     ),
                     icon: Icons.trending_up,
                   ),

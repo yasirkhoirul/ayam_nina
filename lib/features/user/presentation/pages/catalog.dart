@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kedai_ayam_nina/core/widgets/animated_scroll_item.dart';
 import 'package:kedai_ayam_nina/core/widgets/card/card_product.dart';
 import 'package:kedai_ayam_nina/features/produk/presentation/bloc/product_catalog_bloc.dart';
 import 'package:kedai_ayam_nina/features/user/presentation/widgets/user_navbar.dart';
 import 'package:kedai_ayam_nina/features/user/presentation/widgets/user_footer.dart';
 import 'package:kedai_ayam_nina/features/user/presentation/widgets/user_drawer.dart';
+import 'package:kedai_ayam_nina/router/router.dart';
 
 class CatalogPage extends StatefulWidget {
   const CatalogPage({super.key});
@@ -120,6 +122,7 @@ class _CatalogPageState extends State<CatalogPage> {
                           product: filteredProducts[index],
                           isAdmin: false,
                           onDelete: () {}, // No action for user side
+                          onTapCard: () => context.pushNamed(MyRoute.detail.name, extra: filteredProducts[index]),
                         ),
                       );
                     }, childCount: filteredProducts.length),
