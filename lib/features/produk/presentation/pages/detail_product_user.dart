@@ -9,11 +9,12 @@ class DetailProductUserPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDesktop = MediaQuery.of(context).size.width >= 800;
 
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(32),
+          padding: EdgeInsets.all(isDesktop ? 32 : 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -34,30 +35,39 @@ class DetailProductUserPage extends StatelessWidget {
                   const SizedBox(width: 16),
                   Text(
                     "Detail Produk",
-                    style: theme.textTheme.displayMedium,
+                    style: isDesktop ? theme.textTheme.displayMedium : theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
               const SizedBox(height: 32),
 
-              // Main Content: Image + Details side by side
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Left: Image Gallery
-                  Expanded(
-                    flex: 5,
-                    child: _buildImageSection(theme),
-                  ),
-                  const SizedBox(width: 40),
+              // Main Content: Image + Details responsive
+              isDesktop
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Left: Image Gallery
+                        Expanded(
+                          flex: 5,
+                          child: _buildImageSection(theme),
+                        ),
+                        const SizedBox(width: 40),
 
-                  // Right: Product Info
-                  Expanded(
-                    flex: 5,
-                    child: _buildInfoSection(theme),
-                  ),
-                ],
-              ),
+                        // Right: Product Info
+                        Expanded(
+                          flex: 5,
+                          child: _buildInfoSection(theme),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildImageSection(theme),
+                        const SizedBox(height: 24),
+                        _buildInfoSection(theme),
+                      ],
+                    ),
             ],
           ),
         ),
@@ -270,14 +280,6 @@ class DetailProductUserPage extends StatelessWidget {
                 label: "Kategori",
                 value: product.category,
                 color: const Color(0xFF5D6037),
-                theme: theme,
-              ),
-              const SizedBox(width: 12),
-              _infoChip(
-                icon: Icons.photo_library_rounded,
-                label: "Gambar",
-                value: "${product.imageUrl.length} foto",
-                color: const Color(0xFF1976D2),
                 theme: theme,
               ),
             ],

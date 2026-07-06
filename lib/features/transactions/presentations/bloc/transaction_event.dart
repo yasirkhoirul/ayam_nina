@@ -34,3 +34,12 @@ class GetAnnualGrowthEvent extends TransactionEvent {
   @override
   List<Object> get props => [year];
 }
+
+class UpdateTransactionEvent extends TransactionEvent {
+  final Transaction transaction;
+
+  const UpdateTransactionEvent({required this.transaction});
+
+  @override
+  List<Object> get props => [transaction];
+}

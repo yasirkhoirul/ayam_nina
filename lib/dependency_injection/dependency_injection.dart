@@ -1,4 +1,4 @@
-﻿import 'package:dio/dio.dart';
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kedai_ayam_nina/features/auth/data/datasources/auth_network_datasource.dart';
@@ -84,7 +84,7 @@ Future<void> setup() async {
     () => AuthBloc(login: getIt(), register: getIt(), logout: getIt(), watchAuth: getIt()),
   );
 
-  getIt.registerFactory<ProductCatalogBloc>(
+  getIt.registerLazySingleton<ProductCatalogBloc>(
     () => ProductCatalogBloc(getProducts: getIt(), deleteProduct: getIt()),
   );
 
@@ -102,6 +102,7 @@ Future<void> setup() async {
       createTransaction: getIt(),
       getAnnualGrowth: getIt(),
       deleteTransaction: getIt(),
+      updateTransaction: getIt(),
     ),
   );
 }

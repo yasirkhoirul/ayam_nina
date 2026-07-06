@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:logger/web.dart';
 import '../../../../dependency_injection/dependency_injection.dart';
 import '../../domain/entities/product.dart';
+import '../bloc/product_catalog_bloc.dart';
 import '../bloc/product_mutation_bloc.dart';
 
 class ProductMutationPage extends StatefulWidget {
@@ -80,7 +81,13 @@ class _ProductMutationPageState extends State<ProductMutationPage> {
               if (state is ProductMutationSuccess) {
                 ScaffoldMessenger.of(
                   context,
-                ).showSnackBar(SnackBar(content: Text(state.message)));
+                ).showSnackBar(SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: const Color(0xFF2E7D32),
+                ));
+                // Refresh catalog singleton lalu navigate kembali
+                getIt<ProductCatalogBloc>().add(LoadProducts());
+                context.go('/admin/catalog');
               } else if (state is ProductMutationFailure) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -264,6 +271,16 @@ class _ProductMutationPageState extends State<ProductMutationPage> {
                                   : () {
                                       if (_formKey.currentState!.validate() &&
                                           _selectedCategory != null) {
+                                        // Validasi gambar wajib saat create
+                                        if (!isUpdate && _imageUrlPreview.isEmpty) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(
+                                              content: Text("Gambar produk tidak boleh kosong! Silakan upload gambar terlebih dahulu."),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                          return;
+                                        }
                                           final product = Product(
                                           id: widget.product?.id ?? '',
                                           name: _nameController.text,

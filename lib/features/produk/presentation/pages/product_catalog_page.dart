@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kedai_ayam_nina/core/widgets/card/card_product.dart';
@@ -11,8 +11,10 @@ class ProductCatalogPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 800;
-    return BlocProvider(
-      create: (_) => getIt<ProductCatalogBloc>()..add(LoadProducts()),
+    // Pakai BlocProvider.value agar singleton tidak di-dispose saat halaman unmount
+    final catalogBloc = getIt<ProductCatalogBloc>()..add(LoadProducts());
+    return BlocProvider.value(
+      value: catalogBloc,
       child: Scaffold(
         backgroundColor: const Color(0xFFFDFBF0),
         body: Padding(

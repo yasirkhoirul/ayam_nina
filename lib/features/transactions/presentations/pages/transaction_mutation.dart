@@ -31,12 +31,32 @@ class _TransactionMutationState extends State<TransactionMutation> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                "Transaction Mutation Page",
-                style: Theme.of(context).textTheme.displayMedium,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Transaction Mutation Page",
+                        style: Theme.of(context).textTheme.displayMedium,
+                      ),
+                      const SizedBox(height: 4),
+                      const Text("Kelola Arus kas harian untuk Dapur Ayam Nina"),
+                    ],
+                  ),
+                  IconButton.filled(
+                    onPressed: () => context.read<TransactionListCubit>().fetchTransactions(),
+                    icon: const Icon(Icons.refresh_rounded),
+                    tooltip: "Refresh History",
+                    style: IconButton.styleFrom(
+                      backgroundColor: const Color(0xFF8B4513),
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              const Text("Kelola Arus kas harian untuk Dapur Ayam Nina"),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: BlocConsumer<TransactionBloc, TransactionState>(

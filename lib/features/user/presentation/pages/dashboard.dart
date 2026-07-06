@@ -203,65 +203,28 @@ class _DashboardState extends State<Dashboard> {
                   return const Center(child: Text("Menu belum tersedia."));
                 }
                 
-                final product1 = products.isNotEmpty ? products[0] : null;
-                final product2 = products.length > 1 ? products[1] : null;
-
-                if (isDesktop) {
-                  return SizedBox(
-                    height: 350,
-                    child: Row(
-                      children: [
-                        if (product1 != null)
-                          Expanded(
-                            child: ProductGridItem(
-                              product: product1,
-                              isAdmin: false,
-                              onDelete: () {}, // Kosongkan action untuk tampilan dashboard
-                              onTapCard: () => context.pushNamed(MyRoute.detail.name, extra: product1),
-                            ),
-                          ),
-                        if (product2 != null) ...[
-                          const SizedBox(width: 24),
-                          Expanded(
-                            child: ProductGridItem(
-                              product: product2,
-                              isAdmin: false,
-                              onDelete: () {},
-                              onTapCard: () => context.pushNamed(MyRoute.detail.name, extra: product2),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  );
-                } else {
-                  return Column(
-                    children: [
-                      if (product1 != null)
-                        SizedBox(
-                          height: 350,
-                          child: ProductGridItem(
-                            product: product1,
-                            isAdmin: false,
-                            onDelete: () {},
-                            onTapCard: () => context.pushNamed(MyRoute.detail.name, extra: product1),
-                          ),
-                        ),
-                      if (product2 != null) ...[
-                        const SizedBox(height: 16),
-                        SizedBox(
-                          height: 350,
-                          child: ProductGridItem(
-                            product: product2,
-                            isAdmin: false,
-                            onDelete: () {},
-                            onTapCard: () => context.pushNamed(MyRoute.detail.name, extra: product2),
-                          ),
-                        ),
-                      ]
-                    ], // Children
-                  );
-                }
+                final bestSellers = products.take(2).toList();
+                
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 320,
+                    mainAxisExtent: 340,
+                    crossAxisSpacing: 24,
+                    mainAxisSpacing: 24,
+                  ),
+                  itemCount: bestSellers.length,
+                  itemBuilder: (context, index) {
+                    final product = bestSellers[index];
+                    return ProductGridItem(
+                      product: product,
+                      isAdmin: false,
+                      onDelete: () {},
+                      onTapCard: () => context.pushNamed(MyRoute.detail.name, extra: product),
+                    );
+                  },
+                );
               }
               return const SizedBox();
             },

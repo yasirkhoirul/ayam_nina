@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:kedai_ayam_nina/dependency_injection/dependency_injection.dart';
 import 'package:kedai_ayam_nina/features/produk/domain/entities/product.dart';
+import 'package:kedai_ayam_nina/features/produk/presentation/bloc/product_catalog_bloc.dart';
+import 'package:kedai_ayam_nina/features/produk/presentation/bloc/product_mutation_bloc.dart';
 
 class DetailProductPage extends StatelessWidget {
   final Product product;
@@ -10,55 +15,60 @@ class DetailProductPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Back button + Title
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.arrow_back_rounded),
-                    tooltip: "Kembali",
-                    style: IconButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Text(
-                    "Detail Produk",
-                    style: theme.textTheme.displayMedium,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 32),
-
-              // Main Content: Image + Details side by side
-              Row(
+    return BlocProvider(
+      create: (_) => getIt<ProductMutationBloc>(),
+      child: Builder(
+        builder: (innerContext) => Scaffold(
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Left: Image Gallery
-                  Expanded(
-                    flex: 5,
-                    child: _buildImageSection(theme),
+                  // Back button + Title
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => Navigator.of(innerContext).pop(),
+                        icon: const Icon(Icons.arrow_back_rounded),
+                        tooltip: "Kembali",
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Text(
+                        "Detail Produk",
+                        style: theme.textTheme.displayMedium,
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 40),
+                  const SizedBox(height: 32),
 
-                  // Right: Product Info
-                  Expanded(
-                    flex: 5,
-                    child: _buildInfoSection(theme),
+                  // Main Content: Image + Details side by side
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Left: Image Gallery
+                      Expanded(
+                        flex: 5,
+                        child: _buildImageSection(theme),
+                      ),
+                      const SizedBox(width: 40),
+
+                      // Right: Product Info
+                      Expanded(
+                        flex: 5,
+                        child: _buildInfoSection(theme, innerContext),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -135,7 +145,7 @@ class DetailProductPage extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoSection(ThemeData theme) {
+  Widget _buildInfoSection(ThemeData theme, BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
@@ -285,39 +295,106 @@ class DetailProductPage extends StatelessWidget {
           const SizedBox(height: 28),
 
           // Action Buttons
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.edit_rounded, size: 18),
-                  label: const Text("Edit Produk"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFD66B0D),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+          BlocListener<ProductCatalogBloc, ProductCatalogState>(
+            bloc: getIt<ProductCatalogBloc>(),
+            listener: (context, state) {
+              if (state is ProductCatalogActionSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Produk berhasil dihapus"),
+                    backgroundColor: Color(0xFF2E7D32),
+                  ),
+                );
+                context.go('/admin/catalog');
+              }
+            },
+            child: BlocListener<ProductMutationBloc, ProductMutationState>(
+              listener: (context, state) {
+                if (state is ProductMutationSuccess) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: const Color(0xFF2E7D32),
+                    ),
+                  );
+                  // Refresh catalog singleton lalu kembali
+                  getIt<ProductCatalogBloc>().add(LoadProducts());
+                  context.go('/admin/catalog');
+                } else if (state is ProductMutationFailure) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        context.go('/admin/catalog/mutation', extra: product);
+                      },
+                      icon: const Icon(Icons.edit_rounded, size: 18),
+                      label: const Text("Edit Produk"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFD66B0D),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              OutlinedButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.delete_outline_rounded, size: 18),
-                label: const Text("Hapus"),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.red.shade600,
-                  side: BorderSide(color: Colors.red.shade300),
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 16, horizontal: 24),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  const SizedBox(width: 12),
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (dialogCtx) => AlertDialog(
+                          title: const Text("Hapus Produk"),
+                          content: Text(
+                            "Yakin ingin menghapus \"${product.name}\"?",
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(dialogCtx),
+                              child: const Text("Batal"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(dialogCtx);
+                                // Pakai ProductCatalogBloc singleton — sudah auto-reload setelah delete
+                                getIt<ProductCatalogBloc>().add(
+                                  DeleteProductEvent(product.id),
+                                );
+                              },
+                              child: const Text(
+                                "Hapus",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.delete_outline_rounded, size: 18),
+                    label: const Text("Hapus"),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.red.shade600,
+                      side: BorderSide(color: Colors.red.shade300),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 24),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ],
       ),

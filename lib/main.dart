@@ -20,7 +20,7 @@ void main() async {
         BlocProvider(create: (context) => getIt<AuthBloc>()),
         BlocProvider(create: (context) => getIt<TransactionBloc>()),
         BlocProvider(create: (context) => getIt<TransactionListCubit>(),),
-        BlocProvider(create: (context) => getIt<ProductCatalogBloc>()..getProducts),
+        BlocProvider(create: (context) => getIt<ProductCatalogBloc>()..add(LoadProducts())),
       ],
       child: const MainApp(),
     ),
